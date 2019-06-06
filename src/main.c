@@ -12,81 +12,70 @@
 
 #include "ft_ls.h"
 
-void		add_stat(t_stat **stat)
+void		read_dir(t_ls *ls, t_ls **begin, int flags)
 {
-	t_stat		*new_stat;
-	t_stat		*tmp_stat;
+	DIR		*dir;
+	t_dir	*entry;
 
-	tmp_stat = *stat;
-	if (!(new_stat = (t_stat*)malloc(sizeof(t_stat))))
-		cleanup(*stat, -1, "Error - malloc failed");
-	ft_bzero((void*)new_stat, sizeof(t_stat));
-	if (!*stat)
+	if (!(dir = opendir(ls->path)) && ft_dprintf(2, "Error - Openfile"))
+		return ;
+	if (!(flags & FL_DIR))
 	{
-		*stat = new_stat;
-		return;
-	}
-	while (tmp_stat->next)
-		tmp_stat = tmp_stat->next;
-	tmp_stat->next = new_stat;
-
-}
-
-void		list_dir(char *path, int flags, t_stat **stat)
-{
-	DIR			*dir;
-	t_dir		 *entry;
-	size_t		len;
-	char		*name;
-		
-	add_stat(newstat, stat);
-	len = ft_strlen(path);
-	ft_printf("path -%s\n", path);
-	if (!(dir = opendir(path))) 
-		cleanup(*stat, -1, "Error - Failed to open dir");
-	ft_printf("%s\n", path);
-	while ((entry = readdir(dir)) != NULL) 
-	{
-		name = entry->d_name;
-		if (entry->d_type == DT_DIR) 
+		while (entry = readdir(dir))
 		{
-			if (!strcmp(name, ".") || !strcmp(name, ".."))
-				continue;
-			if (len + strlen(name) + 2 > PATH_MAX) 
-				ft_printf("path too long: %s/%s\n", path, name);
-//			else {
-//				path[len] = '/';
-//				strcpy(path + len + 1, name);
-//				list_dir(path, flags, stat);
-//				path[len] = '\0';
-//			}
-		} 
-		else 
-			ft_printf("%s\n", name);
+			if (entry->d_name[0] != '.')
+				add_ls(ls->path, entry->d_name, begin);
+		}
 	}
 	closedir(dir);
+
 }
 
-void		print_output(int ac, char **av, int flags)
+void		recursion(t_ls *begin, int flags, int first)
 {
-	int		i;
-	t_stat	*stat;
+	t_ls	*ls;
 
-	i = -1;
-	while (++i < ac)
-		list_dir(av[i], flags, &stat);
-	
+	ls = begin;
+	if (!(flags & FL_REC) && !first)
+		return ;
+	while (ls)
+	{
+		if (S_ISDIR(ls->mode) && (first || (ft_strcmp(ls->name, ".")
+			&& ft_strcmp(ls->name, ".."))))
+		{
+			ft_printf("\n%s:\n", ls->path);
+			begin = NULL;
+			read_dir(ls, &begin, flags);
+			print_ls(begin);
+			recursion(begin, flags, 0);
+		}
+		ls = ls->next;
+	}
+}
+
+void		print_ls(t_ls *ls)
+{
+	while (ls)
+	{
+		ft_printf("%s\n", ls->name);
+		ls = ls->next;
+	}
 }
 
 int			main(int ac, char **av)
 {
 	int		flags;
+	t_ls	*ls;
 
 	flags = 0;
+	ls = NULL;
 	parse_params(&ac, &av, &flags);
-	print_output(ac, av, flags);
+	ft_printf("flags - %b\n", flags);
+	init_ls(ac, av, &ls);
+	recursion(ls, flags, 1);
+
+//	print_ls(ls);
 	
-	ft_printf("flags -- %d - %s - %b\n", ac, av[0], flags);
-	cleanup(NULL, 0, "Success");
+	cleanup(&ls, 0, "Success");
 	return (0);
 }

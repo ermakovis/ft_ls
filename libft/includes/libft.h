@@ -91,7 +91,7 @@ int					ft_strclen(char *str, char *str2);
 void				ft_strtoupper(char *str);
 void				ft_swap(char *a, char *b);
 int					ft_power(int n, int power);
-int					ft_unbrlen(uintmax_t num, int base);
-int					ft_nbrlen(intmax_t num, int base);
+int					ft_unbrlen(unsigned long long int num, int base);
+int					ft_nbrlen(long long int num, int base);
 
 #endif

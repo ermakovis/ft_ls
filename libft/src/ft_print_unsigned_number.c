@@ -25,7 +25,7 @@ static int		ft_printf_basebyletter(t_pf *pf)
 	return (0);
 }
 
-static void		ft_printf_uitoa(uintmax_t num, t_pf *pf)
+static void		ft_printf_uitoa(unsigned long long int num, t_pf *pf)
 {
 	int		size;
 	char	*tab;
@@ -56,7 +56,7 @@ void			ft_printf_unsigned_number(va_list valist, t_pf *pf, t_res *res)
 	else if (pf->length == 4)
 		ft_printf_uitoa((unsigned short)va_arg(valist, int), pf);
 	else if (pf->length == 5)
-		ft_printf_uitoa(va_arg(valist, uintmax_t), pf);
+		ft_printf_uitoa(va_arg(valist, unsigned long long int), pf);
 	else if (pf->length == 6)
 		ft_printf_uitoa(va_arg(valist, size_t), pf);
 	else

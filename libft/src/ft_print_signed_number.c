@@ -13,7 +13,7 @@
 #include "limits.h"
 #include "../includes/ft_printf.h"
 
-void	ft_printf_itoa(intmax_t num, t_pf *pf)
+void	ft_printf_itoa(long long int num, t_pf *pf)
 {
 	int		size;
 
@@ -48,7 +48,7 @@ void	ft_printf_signed_number(va_list valist, t_pf *pf, t_res *res)
 	else if (pf->length == 4)
 		ft_printf_itoa((short int)va_arg(valist, int), pf);
 	else if (pf->length == 5)
-		ft_printf_itoa(va_arg(valist, intmax_t), pf);
+		ft_printf_itoa(va_arg(valist, long long int), pf);
 	else if (pf->length == 6)
 		ft_printf_itoa(va_arg(valist, size_t), pf);
 	else

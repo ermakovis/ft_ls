@@ -12,9 +12,9 @@
 
 #include "../includes/ft_ls.h"
 
-void	cleanup(t_stat *stat, int code, char *message)
+void	cleanup(t_ls **ls, int code, char *message)
 {
-	stat = stat;
+	ls = ls;
 	if (code < 0)
 		ft_dprintf(2, "%s\n", message);
 	exit (code);

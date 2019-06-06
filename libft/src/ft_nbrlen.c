@@ -13,9 +13,9 @@
 #include <stdlib.h>
 #include "libft.h"
 
-int			ft_nbrlen(intmax_t num, int base)
+int			ft_nbrlen(long long int num, int base)
 {
-	intmax_t i;
+	long long int i;
 
 	i = 1;
 	if (num < 0)
@@ -23,7 +23,7 @@ int			ft_nbrlen(intmax_t num, int base)
 		i++;
 		num = -num;
 	}
-	while (num > (intmax_t)base - 1)
+	while (num > (long long int)base - 1)
 	{
 		num /= base;
 		i++;
@@ -31,12 +31,12 @@ int			ft_nbrlen(intmax_t num, int base)
 	return (i);
 }
 
-int			ft_unbrlen(uintmax_t num, int base)
+int			ft_unbrlen(unsigned long long int num, int base)
 {
-	uintmax_t i;
+	unsigned long long int i;
 
 	i = 1;
-	while (num > (uintmax_t)base - 1)
+	while (num > (unsigned long long int)base - 1)
 	{
 		num /= base;
 		i++;

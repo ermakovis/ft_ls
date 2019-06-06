@@ -50,9 +50,7 @@ static void		ft_print_result(va_list valist, t_pf *pf, t_res *res)
 static int		ft_printf_cycle(char *line, va_list valist, t_res *res)
 {
 	t_pf		*pf;
-	int			i;
 
-	i = 0;
 	while (line[res->len])
 	{
 		if (line[res->len] == '%')

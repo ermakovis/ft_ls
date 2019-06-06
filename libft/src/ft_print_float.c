@@ -12,7 +12,7 @@
 
 #include "../includes/ft_printf.h"
 
-static char		*ft_printf_ftoa(intmax_t num, t_pf *pf)
+static char		*ft_printf_ftoa(long long int num, t_pf *pf)
 {
 	int		size;
 	char	*buff;
@@ -39,8 +39,8 @@ static char		*ft_printf_ftoa(intmax_t num, t_pf *pf)
 	return (buff);
 }
 
-static void		ft_printf_float_comb(intmax_t left, intmax_t right, t_pf *pf, \
-					char *buff)
+static void		ft_printf_float_comb(long long int left, long long int right, \
+					t_pf *pf, char *buff)
 {
 	int		llen;
 	int		rlen;
@@ -109,20 +109,20 @@ static void		ft_printf_float_width(t_pf *pf)
 
 void			ft_printf_float(double dbl, t_pf *pf, t_res *res)
 {
-	double			decimal;
-	intmax_t		right;
-	intmax_t		left;
-	char			buff[128];
+	double				decimal;
+	long long int		right;
+	long long int		left;
+	char				buff[128];
 
 	ft_bzero(buff, 128);
 	if (pf->prec == -1)
 		pf->prec = 6;
-	left = (intmax_t)dbl;
+	left = (long long int)dbl;
 	decimal = (dbl > 0 ? dbl : -dbl);
-	decimal = (decimal - (intmax_t)(decimal)) * ft_power(10, pf->prec + 1);
-	decimal = ((intmax_t)decimal % 10 > 4) ?\
+	decimal = (decimal - (long long int)(decimal)) * ft_power(10, pf->prec + 1);
+	decimal = ((long long int)decimal % 10 > 4) ?\
 		decimal / 10 + 1 : decimal / 10;
-	right = (intmax_t)decimal;
+	right = (long long int)decimal;
 	ft_printf_float_comb(left, right, pf, buff);
 	ft_printf_float_flags(pf, buff);
 	ft_memdel((void**)&(pf->buff));

@@ -20,6 +20,7 @@ LIB_DIR=./libft
 OBJ_DIR=./obj
 
 SRC_NAME=main.c\
+		 init_ls.c\
 		 parse.c\
 		 cleanup.c
 
@@ -33,21 +34,25 @@ INC = -I ./includes -I $(LIB_DIR)/includes
 all: $(NAME)
 
 $(NAME) : $(OBJ) 
-	@make -C $(LIB_DIR)
-	@$(CC) -o $(NAME) $(OBJ) -L $(LIB_DIR) -lft $(INC)
+	@make -s -C $(LIB_DIR)
+	@$(CC) -o $(NAME) $(OBJ) $(LIB_DIR)/libft.a $(INC) -lpthread
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+	@mkdir -p obj
 	@$(CC) -o $@ -c $< $(INC)
 	@echo "\033[34m\033[1mCompilation of \033[0m\033[36m$(notdir $<)\033[1m\033[34m done.\033[0m"
 
 clean:
+		@make clean -s -C $(LIB_DIR)
 		@rm -f $(OBJ)
 
 fclean: clean
-		@make fclean -C $(LIB_DIR)
-		@rm -f checker push_swap
+		@make fclean -s -C $(LIB_DIR)
+		@rm -f $(NAME)
 
 test: $(NAME)
-	./$(NAME) -Ral
+	./$(NAME) -Ral .
 
 re:	fclean all
+
+.PHONY: all, clean, fclean, re
