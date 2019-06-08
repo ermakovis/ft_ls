@@ -45,7 +45,7 @@ void						cleanup(t_ls **ls, int code, char *message);
 void						parse_params(int *ac, char ***av, int *flags);
 void						init_ls(int ac, char **av, t_ls **ls);
 void						add_ls(char path[PATH_MAX], char name[NAME_MAX], t_ls **ls);
-void						print_ls(t_ls *ls);
+void						print(t_ls *ls, int flags);
 
 
 #endif

@@ -20,8 +20,9 @@ LIB_DIR=./libft
 OBJ_DIR=./obj
 
 SRC_NAME=main.c\
-		 init_ls.c\
 		 parse.c\
+		 init_ls.c\
+		 print_ls.c\
 		 cleanup.c
 
 OBJ_NAME=$(SRC_NAME:.c=.o)

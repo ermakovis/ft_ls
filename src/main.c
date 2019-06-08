@@ -17,6 +17,7 @@ void		read_dir(t_ls *ls, t_ls **begin, int flags)
 	DIR		*dir;
 	t_dir	*entry;
 
+	*begin = NULL;
 	if (!(dir = opendir(ls->path)) && ft_dprintf(2, "Error - Openfile"))
 		return ;
 	if (!(flags & FL_DIR))
@@ -28,7 +29,6 @@ void		read_dir(t_ls *ls, t_ls **begin, int flags)
 		}
 	}
 	closedir(dir);
-
 }
 
 void		recursion(t_ls *begin, int flags, int first)
@@ -36,28 +36,17 @@ void		recursion(t_ls *begin, int flags, int first)
 	t_ls	*ls;
 
 	ls = begin;
-	if (!(flags & FL_REC) && !first)
-		return ;
 	while (ls)
 	{
 		if (S_ISDIR(ls->mode) && (first || (ft_strcmp(ls->name, ".")
 			&& ft_strcmp(ls->name, ".."))))
 		{
-			ft_printf("\n%s:\n", ls->path);
-			begin = NULL;
+			ft_printf("%s:\n", ls->path);
 			read_dir(ls, &begin, flags);
-			print_ls(begin);
-			recursion(begin, flags, 0);
+			print(begin, flags);
+			(flags & FL_REC) ? recursion(begin, flags, 0) : 1;
+			cleanup(&begin, 1, "");
 		}
-		ls = ls->next;
-	}
-}
-
-void		print_ls(t_ls *ls)
-{
-	while (ls)
-	{
-		ft_printf("%s\n", ls->name);
 		ls = ls->next;
 	}
 }
@@ -70,12 +59,7 @@ int			main(int ac, char **av)
 	flags = 0;
 	ls = NULL;
 	parse_params(&ac, &av, &flags);
-	ft_printf("flags - %b\n", flags);
 	init_ls(ac, av, &ls);
 	recursion(ls, flags, 1);
-
-//	print_ls(ls);
-	
 	cleanup(&ls, 0, "Success");
-	return (0);
 }

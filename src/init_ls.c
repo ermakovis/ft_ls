@@ -20,15 +20,10 @@ static void		handle_path(char path[PATH_MAX], char name[NAME_MAX], t_ls *new, t_
 	pathlen = ft_strlen(path);
 	ft_memcpy(new->name, name, namelen);
 	if (pathlen && path[pathlen - 1] != '/')
-	{
-		path[pathlen] = '/';
-		pathlen++;
-	}
+		path[pathlen++] = '/';
 	namelen + pathlen > PATH_MAX ? cleanup(ls, -1, "Error - Path too long") : 1;
 	ft_memcpy(new->path, path, pathlen);
 	ft_memcpy(new->path + pathlen, name, namelen);
-	new->path[namelen + pathlen] = '\0';
-
 }
 
 void		add_ls(char path[PATH_MAX], char name[NAME_MAX], t_ls **ls)
@@ -39,7 +34,7 @@ void		add_ls(char path[PATH_MAX], char name[NAME_MAX], t_ls **ls)
 	tmp = *ls;
 	if (!(new = (t_ls*)malloc(sizeof(t_ls))))
 		cleanup(ls, -1, "Error - Failed to malloc for a ls");
-	ft_bzero(new, sizeof(new));
+	ft_bzero(new, sizeof(*new));
 	handle_path(path, name, new, ls);
 	handle_stat(new, ls);
 	if (!tmp)

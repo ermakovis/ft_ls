@@ -14,8 +14,17 @@
 
 void	cleanup(t_ls **ls, int code, char *message)
 {
-	ls = ls;
+	t_ls *tmp;
+
+	tmp = NULL;
+	while (*ls)
+	{
+		tmp = *ls;
+		(*ls) = (*ls)->next;
+		ft_memdel((void**)&tmp);
+	}
 	if (code < 0)
 		ft_dprintf(2, "%s\n", message);
-	exit (code);
+	if (code <= 0)
+		exit (code);
 }
