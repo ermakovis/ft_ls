@@ -5,7 +5,10 @@ static void		handle_stat(t_ls *new, t_ls **ls)
 	t_stat	stat;
 	
 	if (lstat(new->path, &stat) == -1)
-		cleanup(ls, -1, "Error - failed to get stats");
+	{
+		ft_dprintf(2, "ft_ls: %s: No such file or directory\n", new->path);
+		return ;
+	}
 	new->mode = stat.st_mode;
 	new->link = stat.st_nlink;
 	new->uid = stat.st_uid;

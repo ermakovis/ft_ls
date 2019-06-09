@@ -6,7 +6,7 @@
 /*   By: tcase <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/02 15:33:11 by tcase             #+#    #+#             */
-/*   Updated: 2019/06/09 19:22:42 by tcase            ###   ########.fr       */
+/*   Updated: 2019/06/09 21:03:52 by tcase            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@
 # define FL_LNG (1 << 3)
 # define FL_REV (1 << 4)
 # define FL_STM (1 << 5)
+# define FL_ONE (1 << 6)
+# define FL_MIN (1 << 7)
 
 # define FL_REGNL (1 << 28)
 # define FL_HEADR (1 << 29)
