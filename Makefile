@@ -6,7 +6,7 @@
 #    By: tcase <marvin@42.fr>                       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/04/06 11:31:10 by tcase             #+#    #+#              #
-#    Updated: 2019/06/02 16:47:44 by tcase            ###   ########.fr        #
+#    Updated: 2019/06/09 19:22:43 by tcase            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,7 +22,9 @@ OBJ_DIR=./obj
 SRC_NAME=main.c\
 		 parse.c\
 		 init_ls.c\
-		 print_ls.c\
+		 print.c\
+		 print_file.c\
+		 sort_ls.c\
 		 cleanup.c
 
 OBJ_NAME=$(SRC_NAME:.c=.o)
@@ -52,7 +54,7 @@ fclean: clean
 		@rm -f $(NAME)
 
 test: $(NAME)
-	./$(NAME) -Ral .
+	./$(NAME) -l includes/ . src/ libft/
 
 re:	fclean all
 

@@ -7,6 +7,14 @@ static void		handle_stat(t_ls *new, t_ls **ls)
 	if (lstat(new->path, &stat) == -1)
 		cleanup(ls, -1, "Error - failed to get stats");
 	new->mode = stat.st_mode;
+	new->link = stat.st_nlink;
+	new->uid = stat.st_uid;
+	new->gid = stat.st_gid;
+	new->size = stat.st_size;
+	new->blocks = stat.st_blocks;
+	new->atime = stat.st_atime;
+	new->mtime = stat.st_mtime;
+	new->ctime = stat.st_ctime;
 }
 
 static void		handle_path(char path[PATH_MAX], char name[NAME_MAX], t_ls *new, t_ls **ls)

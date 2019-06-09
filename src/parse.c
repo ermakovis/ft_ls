@@ -6,7 +6,7 @@
 /*   By: tcase <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/02 16:48:04 by tcase             #+#    #+#             */
-/*   Updated: 2019/06/02 17:53:00 by tcase            ###   ########.fr       */
+/*   Updated: 2019/06/09 17:09:16 by tcase            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,5 +36,4 @@ void		parse_params(int *ac, char ***av, int *flags)
 		add_flag(str[count], flags);
 	*av = *av + count;
 	*ac = *ac - count;		
-		
 }

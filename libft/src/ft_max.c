@@ -1,30 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cleanup.c                                          :+:      :+:    :+:   */
+/*   ft_max.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tcase <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/06/02 15:23:57 by tcase             #+#    #+#             */
-/*   Updated: 2019/06/08 18:03:21 by tcase            ###   ########.fr       */
+/*   Created: 2019/06/08 17:30:26 by tcase             #+#    #+#             */
+/*   Updated: 2019/06/08 17:31:12 by tcase            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/ft_ls.h"
+#include "libft.h"
 
-void	cleanup(t_ls **ls, int code, char *message)
+int		ft_max(int a, int b)
 {
-	t_ls *tmp;
-
-	tmp = NULL;
-	while (ls && *ls)
-	{
-		tmp = *ls;
-		(*ls) = (*ls)->next;
-		ft_memdel((void**)&tmp);
-	}
-	if (code < 0)
-		ft_dprintf(2, "%s\n", message);
-	if (code <= 0)
-		exit (code);
+	if (a >= b)
+		return (a);
+	return (b);
 }
