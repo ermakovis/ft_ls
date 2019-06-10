@@ -6,7 +6,7 @@
 /*   By: tcase <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/02 15:15:48 by tcase             #+#    #+#             */
-/*   Updated: 2019/06/09 21:19:31 by tcase            ###   ########.fr       */
+/*   Updated: 2019/06/10 12:22:59 by tcase            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,7 @@ void		recursion(t_ls *begin, int flags, int first)
 						&& ft_strcmp(ls->name, ".."))))
 		{
 			flags & FL_SEPAR ? ft_printf("\n") : (flags |= FL_SEPAR);
-			if ((flags & FL_HEADR || !first))
-				ft_printf("%s:\n", ls->path);
+			flags & FL_HEADR || !first ? ft_printf("%s:\n", ls->path) : 1;
 			read_dir(ls, &begin, flags);
 			sort_ls(&begin, flags);
 			print(begin, flags);

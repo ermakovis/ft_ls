@@ -6,7 +6,8 @@ static void		handle_stat(t_ls *new, t_ls **ls)
 	
 	if (lstat(new->path, &stat) == -1)
 	{
-		ft_dprintf(2, "ft_ls: %s: No such file or directory\n", new->path);
+		ft_dprintf(2, "ft_ls: %s: No such file or directory\n",\
+				(ft_strcmp("",new->path) ? new->path : "fts_open"));
 		return ;
 	}
 	new->mode = stat.st_mode;
@@ -35,6 +36,8 @@ static void		handle_path(char path[PATH_MAX], char name[NAME_MAX], t_ls *new, t_
 	namelen + pathlen > PATH_MAX ? cleanup(ls, -1, "Error - Path too long") : 1;
 	ft_memcpy(new->path, path, pathlen);
 	ft_memcpy(new->path + pathlen, name, namelen);
+	handle_stat(new, ls);
+	S_ISLNK(new->mode) && !(ft_strcmp(path,"")) ? ft_printf("@@@@@@@") : 1;
 }
 
 void		add_ls(char path[PATH_MAX], char name[NAME_MAX], t_ls **ls)
@@ -47,7 +50,6 @@ void		add_ls(char path[PATH_MAX], char name[NAME_MAX], t_ls **ls)
 		cleanup(ls, -1, "Error - Failed to malloc for a ls");
 	ft_bzero(new, sizeof(*new));
 	handle_path(path, name, new, ls);
-	handle_stat(new, ls);
 	if (!tmp)
 	{
 		*ls = new;

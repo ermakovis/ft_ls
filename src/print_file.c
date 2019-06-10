@@ -6,7 +6,7 @@
 /*   By: tcase <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/09 19:03:06 by tcase             #+#    #+#             */
-/*   Updated: 2019/06/09 21:28:53 by tcase            ###   ########.fr       */
+/*   Updated: 2019/06/10 12:41:04 by tcase            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static void	print_file_first(t_ls **ls, int flags)
 	tmp = *ls;
 	if (!ls || !*ls)
 		return ;
-	if (S_ISREG(tmp->mode) || S_ISLNK(tmp->mode))
+	if (S_ISREG(tmp->mode))
 	{
 		(*ls) = (*ls)->next;
 		tmp->next = NULL;
@@ -43,7 +43,7 @@ void		print_file(t_ls **ls, int flags)
 	print_file_first(ls, flags);
 	while (tmp->next)
 	{
-		if (tmp->next && (S_ISREG(tmp->next->mode) || S_ISLNK(tmp->next->mode)))
+		if (tmp->next && (S_ISREG(tmp->next->mode)))
 		{
 			cur = tmp->next->next;
 			tmp->next->next = NULL;
