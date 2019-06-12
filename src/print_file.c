@@ -24,7 +24,7 @@ static void	print_file_first(t_ls **ls, int flags)
 		(*ls) = (*ls)->next;
 		tmp->next = NULL;
 		flags ^= FL_REGFL;
-		print(tmp, flags);	
+		flags & FL_LNG ? print_detail(*ls, flags) : print_brief(*ls, flags);
 		ft_memdel((void**)&tmp);
 		flags ^= FL_REGFL;
 		flags |= FL_REGNL;
@@ -48,7 +48,7 @@ void		print_file(t_ls **ls, int flags)
 			cur = tmp->next->next;
 			tmp->next->next = NULL;
 			flags ^= FL_REGFL;
-			print(tmp->next, flags);
+			flags & FL_LNG ? print_detail(*ls, flags) : print_brief(*ls, flags);
 			flags ^= FL_REGFL;
 			ft_memdel((void**)&(tmp->next));
 			tmp->next = cur;

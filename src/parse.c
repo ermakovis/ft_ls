@@ -42,4 +42,5 @@ void		parse_params(int *ac, char ***av, int *flags)
 		add_flag(str[count], flags);
 	*av = *av + count;
 	*ac = *ac - count;		
+	*ac > 1 ? (*flags |= FL_HEADR) : 1;
 }

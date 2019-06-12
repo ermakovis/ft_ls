@@ -83,10 +83,9 @@ void	sort_ls(t_ls **ls, int flags)
 	int		size;
 
 	size = 0;
-	if (!ls || !*ls || !(*ls)->next)
+	if (!ls || !*ls || !(*ls)->next || flags & FL_SRT)
 		return ;
 	sort_ls_lex(ls);
-//	ft_printf("%d - %d\n", (*ls)->mtime, (*ls)->next->mtime);
 	if (flags & FL_STM)
 		sort_ls_mtime(ls);
 	if (flags & FL_REV)

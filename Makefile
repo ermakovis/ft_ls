@@ -51,7 +51,8 @@ clean:
 
 fclean: clean
 		@make fclean -s -C $(LIB_DIR)
-		@rm -f $(NAME)
+		@rm -rf *test*
+		@rm -rf $(NAME)*
 
 test: $(NAME)
 	./$(NAME) -l includes/ . src/ libft/

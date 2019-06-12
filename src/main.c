@@ -12,6 +12,31 @@
 
 #include "ft_ls.h"
 
+void		sort_av(int ac, char ***av, int flags)
+{
+	int		i;
+	char	**tmp;
+	char	*tmpstr;
+
+	i = 0;
+	if (ac < 2 || flags & FL_SRT)
+		return ;
+	tmp = *av;
+	while (i < ac -1)
+	{
+		if (ft_strcmp(tmp[i], tmp[i + 1]) > 0)
+		{
+			tmpstr = tmp[i];
+			tmp[i] = tmp[i + 1];
+			tmp[i + 1] = tmpstr;
+			i = 0;
+		}
+		else
+			i++;
+	}
+	*av = tmp;
+}
+
 void		read_dir(t_ls *ls, t_ls **begin, int flags)
 {
 	DIR		*dir;
@@ -25,6 +50,9 @@ void		read_dir(t_ls *ls, t_ls **begin, int flags)
 		while ((entry = readdir(dir)))
 		{
 			if (entry->d_name[0] != '.' || flags & FL_ALL)
+				add_ls(ls->path, entry->d_name, begin);
+			else if (entry->d_name[0] == '.' && ft_isprint(entry->d_name[1])\
+					&& entry->d_name[1] != '.' && flags & FL_HID)
 				add_ls(ls->path, entry->d_name, begin);
 		}
 	}
@@ -45,7 +73,7 @@ void		recursion(t_ls *begin, int flags, int first)
 			flags & FL_HEADR || !first ? ft_printf("%s:\n", ls->path) : 1;
 			read_dir(ls, &begin, flags);
 			sort_ls(&begin, flags);
-			print(begin, flags);
+			flags & FL_LNG ? print_detail(begin, flags) : print_brief(begin, flags);
 			(flags & FL_REC) ? recursion(begin, flags, 0) : 1;
 			cleanup(&begin, 1, "");
 		}
@@ -61,8 +89,7 @@ int			main(int ac, char **av)
 	flags = 0;
 	ls = NULL;
 	parse_params(&ac, &av, &flags);
-	ac > 1 ? (flags |= FL_HEADR) : 1;
-	//ft_printf("%b\n", flags);
+	sort_av(ac, &av, flags);
 	init_ls(ac, av, &ls);
 	sort_ls(&ls, flags);
 	print_file(&ls, flags);
