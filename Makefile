@@ -22,7 +22,8 @@ OBJ_DIR=./obj
 SRC_NAME=main.c\
 		 parse.c\
 		 init_ls.c\
-		 print.c\
+		 print_detail.c\
+		 print_brief.c\
 		 print_file.c\
 		 sort_ls.c\
 		 cleanup.c
@@ -55,7 +56,7 @@ fclean: clean
 		@rm -rf $(NAME)*
 
 test: $(NAME)
-	./$(NAME) -l includes/ . src/ libft/
+	./$(NAME)  includes/ . src/ libft/
 
 re:	fclean all
 

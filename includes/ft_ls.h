@@ -17,12 +17,14 @@
 # include <grp.h>
 # include <stdlib.h>
 # include <limits.h>
+# include <sys/ioctl.h>
 # include <sys/types.h>
 # include <sys/stat.h>
 # include <dirent.h>
 # include <unistd.h>
 # include "libft.h"
 # define FLAGS "AGRadflnrt1-"
+# define COL_MAX 256
 
 # define FL_HID (1 << 0)
 # define FL_COL (1 << 1)
@@ -59,6 +61,7 @@
 
 typedef struct dirent		t_dir;
 typedef struct stat			t_stat;
+typedef struct winsize		t_wsize;	
 
 typedef struct				s_ls
 {
@@ -78,12 +81,13 @@ typedef struct				s_ls
 
 void						cleanup(t_ls **ls, int code, char *message);
 void						parse_params(int *ac, char ***av, int *flags);
-void						init_ls(int ac, char **av, t_ls **ls);
-void						add_ls(char path[PATH_MAX], char name[NAME_MAX], t_ls **ls);
+void						print_file(t_ls **ls, int flags);
 void						print_detail(t_ls *ls, int flags);
 void						print_brief(t_ls *ls, int flags);
-void						print_file(t_ls **ls, int flags);
+void						print_color(t_ls *ls, int flags);
 void						sort_ls(t_ls **ls, int flags);
+void						init_ls(int ac, char **av, t_ls **ls);
+void						add_ls(char path[PATH_MAX], char name[NAME_MAX], t_ls **ls);
 
 
 #endif

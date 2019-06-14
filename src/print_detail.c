@@ -1,5 +1,4 @@
 #include "ft_ls.h"
-#include <stdio.h>
 
 void		print_detail_width(t_ls *ls, int flags, int width[7])
 {
@@ -51,7 +50,7 @@ void		print_detail_link(t_ls *ls)
 	ft_printf(" -> %s", name);
 }
 
-void		print_color(t_ls *ls, int flags, char perm[11])
+void		print_color(t_ls *ls, int flags)
 {
 	char link[NAME_MAX];
 
@@ -67,7 +66,7 @@ void		print_color(t_ls *ls, int flags, char perm[11])
 	S_ISFIFO(ls->mode) ? ft_printf("%s%-s%s", GREEN, ls->name, RESET) : 1;
 	S_ISCHR(ls->mode) ? ft_printf("%s%-s%s", BLUE, ls->name, RESET) : 1;
 	S_ISREG(ls->mode) ? ft_printf("%s%-s%s", RED, ls->name, RESET) : 1;
-	if (perm[0] == 'l' && flags & FL_LNG)
+	if (flags & FL_LNG && S_ISLNK(ls->mode))
 	{
 		ft_printf(" -> ");
 		readlink(ls->path, link, NAME_MAX);	
@@ -94,22 +93,8 @@ void		print_detail(t_ls *ls, int flags)
 			ft_printf("  %-*s", width[2], getgrgid(ls->gid)->gr_name);
 		ft_printf("  %*lld", width[3], ls->size);
 		ft_printf(" %.12s ", ctime(&(ls->mtime)) + 4);
-		print_color(ls, flags, perm);
+		print_color(ls, flags);
 		ft_printf("\n");
-		ls = ls->next;
-	}
-}
-
-void		print_brief(t_ls *ls, int flags)
-{
-	char	perm[11];
-
-	while (ls)
-	{
-		bzero(perm, sizeof(perm));
-		print_perm(ls, flags, perm);
-		print_color(ls, flags, perm);
-		printf("\n");
 		ls = ls->next;
 	}
 }
