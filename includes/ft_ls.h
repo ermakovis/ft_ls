@@ -16,14 +16,13 @@
 # include <pwd.h>
 # include <grp.h>
 # include <stdlib.h>
-# include <errno.h>
 # include <limits.h>
 # include <sys/types.h>
 # include <sys/stat.h>
 # include <dirent.h>
 # include <unistd.h>
 # include "libft.h"
-# define FLAGS "AGRadflrt1-"
+# define FLAGS "AGRadflnrt1-"
 
 # define FL_HID (1 << 0)
 # define FL_COL (1 << 1)
@@ -32,10 +31,11 @@
 # define FL_DIR (1 << 4)
 # define FL_SRT (1 << 5)
 # define FL_LNG (1 << 6)
-# define FL_REV (1 << 7)
-# define FL_STM (1 << 8)
-# define FL_ONE (1 << 9)
-# define FL_MIN (1 << 10)
+# define FL_IND (1 << 7)
+# define FL_REV (1 << 8)
+# define FL_STM (1 << 9)
+# define FL_ONE (1 << 10)
+# define FL_MIN (1 << 11)
 
 # define FL_REGNL (1 << 28)
 # define FL_HEADR (1 << 29)

@@ -9,8 +9,14 @@ void		print_detail_width(t_ls *ls, int flags, int width[7])
 	while (ls)
 	{
 		width[0] = ft_max(ft_nbrlen(ls->link, 10), width[0]);
-		width[1] = ft_max(ft_strlen(getpwuid(ls->uid)->pw_name), width[1]);
-		width[2] = ft_max(ft_strlen(getgrgid(ls->gid)->gr_name), width[2]);
+		if (flags & FL_IND)
+			width[1] = ft_max(ft_nbrlen(ls->uid, 10), width[1]); 
+		else
+			width[1] = ft_max(ft_strlen(getpwuid(ls->uid)->pw_name), width[1]);
+		if (flags & FL_IND)
+			width[2] = ft_max(ft_nbrlen(ls->gid, 10), width[2]);
+		else
+			width[2] = ft_max(ft_strlen(getgrgid(ls->gid)->gr_name), width[2]);
 		width[3] = ft_max(ft_nbrlen(ls->size, 10), width[3]);
 		total += ls->blocks;
 		ls = ls->next;
@@ -35,7 +41,6 @@ void		print_perm(t_ls *ls, int flags, char str[11])
 	str[7] = (S_IROTH & ls->mode ? 'r' : '-');
 	str[8] = (S_IWOTH & ls->mode ? 'w' : '-');
 	str[9] = (S_IXOTH & ls->mode ? 'x' : '-');
-	str[10] = '\0';
 }
 
 void		print_detail_link(t_ls *ls)
@@ -83,8 +88,10 @@ void		print_detail(t_ls *ls, int flags)
 		print_perm(ls, flags, perm);
 		ft_printf("%s", perm);
 		ft_printf("  %*hu", width[0], ls->link);
-		ft_printf(" %-*s", width[1], getpwuid(ls->uid)->pw_name);
-		ft_printf("  %-*s", width[2], getgrgid(ls->gid)->gr_name);
+		flags & FL_IND ? ft_printf(" %-*d", width[1], ls->uid) :\
+			ft_printf(" %-*s", width[1], getpwuid(ls->uid)->pw_name);
+		flags & FL_IND ? ft_printf(" %-*d", width[2], ls->gid) :\
+			ft_printf("  %-*s", width[2], getgrgid(ls->gid)->gr_name);
 		ft_printf("  %*lld", width[3], ls->size);
 		ft_printf(" %.12s ", ctime(&(ls->mtime)) + 4);
 		print_color(ls, flags, perm);

@@ -89,6 +89,7 @@ int			main(int ac, char **av)
 	flags = 0;
 	ls = NULL;
 	parse_params(&ac, &av, &flags);
+	ft_printf("%b\n", flags);
 	sort_av(ac, &av, flags);
 	init_ls(ac, av, &ls);
 	sort_ls(&ls, flags);

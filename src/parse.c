@@ -26,6 +26,7 @@ void		add_flag(char *str, int *flags)
 			ft_dprintf(2, "usage: ft_ls [-%s] [file ...]\n", FLAGS);
 			exit (1);
 		}
+		shift == 7 ? *flags |= (1 << 6) : 1;
 		*flags |= (1 << shift);
 	}
 }
