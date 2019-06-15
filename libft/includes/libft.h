@@ -6,7 +6,7 @@
 /*   By: tcase <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/14 11:37:29 by tcase             #+#    #+#             */
-/*   Updated: 2019/06/08 17:31:33 by tcase            ###   ########.fr       */
+/*   Updated: 2019/06/14 20:43:59 by tcase            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ typedef struct		s_list
 }					t_list;
 
 int					ft_max(int a, int b);
+int					ft_min(int a, int b);
 int					ft_printf(const char *format, ...);
 int					ft_dprintf(int fd, const char *format, ...);
 int					ft_abs(int num);

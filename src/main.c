@@ -6,11 +6,20 @@
 /*   By: tcase <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/02 15:15:48 by tcase             #+#    #+#             */
-/*   Updated: 2019/06/10 12:22:59 by tcase            ###   ########.fr       */
+/*   Updated: 2019/06/15 22:18:55 by tcase            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
+
+void		sort_ls(t_ls **ls, int flags)
+{
+	sort_lex(ls);
+	if (flags & FL_REV)
+		sort_rev(ls);
+	if (flags & FL_STM)
+		sort_mtime(ls);
+}
 
 void		sort_av(int ac, char ***av, int flags)
 {
@@ -22,7 +31,7 @@ void		sort_av(int ac, char ***av, int flags)
 	if (ac < 2 || flags & FL_SRT)
 		return ;
 	tmp = *av;
-	while (i < ac -1)
+	while (i < ac - 1)
 	{
 		if (ft_strcmp(tmp[i], tmp[i + 1]) > 0)
 		{
@@ -43,8 +52,11 @@ void		read_dir(t_ls *ls, t_ls **begin, int flags)
 	t_dir	*entry;
 
 	*begin = NULL;
-	if (!(dir = opendir(ls->path)) && ft_dprintf(2, "ft_ls: %s: Permission denied\n", ls->path))
+	if (!(dir = opendir(ls->path)))
+	{
+		ft_dprintf(2, "ft_ls: %s: Permission denied\n", ls->path);
 		return ;
+	}
 	if (!(flags & FL_DIR))
 	{
 		while ((entry = readdir(dir)))
@@ -73,7 +85,8 @@ void		recursion(t_ls *begin, int flags, int first)
 			flags & FL_HEADR || !first ? ft_printf("%s:\n", ls->path) : 1;
 			read_dir(ls, &begin, flags);
 			sort_ls(&begin, flags);
-			flags & FL_LNG ? print_detail(begin, flags) : print_brief(begin, flags);
+			flags & FL_LNG ? print_detail(begin, flags) :\
+				print_brief(begin, flags);
 			(flags & FL_REC) ? recursion(begin, flags, 0) : 1;
 			cleanup(&begin, 1, "");
 		}
@@ -89,7 +102,6 @@ int			main(int ac, char **av)
 	flags = 0;
 	ls = NULL;
 	parse_params(&ac, &av, &flags);
-//	ft_printf("%b\n", flags);
 	sort_av(ac, &av, flags);
 	init_ls(ac, av, &ls);
 	sort_ls(&ls, flags);

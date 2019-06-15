@@ -6,7 +6,7 @@
 /*   By: tcase <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/09 19:03:06 by tcase             #+#    #+#             */
-/*   Updated: 2019/06/10 12:41:04 by tcase            ###   ########.fr       */
+/*   Updated: 2019/06/15 19:10:15 by tcase            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,12 @@ static void	print_file_first(t_ls **ls, int flags)
 	tmp = *ls;
 	if (!ls || !*ls)
 		return ;
-	if (S_ISREG(tmp->mode))
+	if (S_ISREG(tmp->mode) || S_ISLNK(tmp->mode))
 	{
 		(*ls) = (*ls)->next;
 		tmp->next = NULL;
 		flags ^= FL_REGFL;
-		flags & FL_LNG ? print_detail(*ls, flags) : print_brief(*ls, flags);
+		flags & FL_LNG ? print_detail(tmp, flags) : print_brief(tmp, flags);
 		ft_memdel((void**)&tmp);
 		flags ^= FL_REGFL;
 		flags |= FL_REGNL;
@@ -43,12 +43,13 @@ void		print_file(t_ls **ls, int flags)
 	print_file_first(ls, flags);
 	while (tmp->next)
 	{
-		if (tmp->next && (S_ISREG(tmp->next->mode)))
+		if (tmp->next && (S_ISREG(tmp->next->mode) || S_ISLNK(tmp->next->mode)))
 		{
 			cur = tmp->next->next;
 			tmp->next->next = NULL;
 			flags ^= FL_REGFL;
-			flags & FL_LNG ? print_detail(*ls, flags) : print_brief(*ls, flags);
+			flags & FL_LNG ? print_detail(tmp->next, flags)\
+				: print_brief(tmp->next, flags);
 			flags ^= FL_REGFL;
 			ft_memdel((void**)&(tmp->next));
 			tmp->next = cur;
