@@ -16,6 +16,7 @@ void		print_detail_width(t_ls *ls, int flags, int width[7])
 {
 	int		total;
 
+	bzero(width, (sizeof(int) * 7));
 	total = 0;
 	while (ls)
 	{
@@ -35,8 +36,9 @@ void		print_detail_width(t_ls *ls, int flags, int width[7])
 	flags & FL_REGFL ? 1 : ft_printf("total %d\n", total);
 }
 
-void		print_perm(t_ls *ls, int flags, char str[11])
+static char		*print_perm(t_ls *ls, int flags, char str[11])
 {
+	bzero(str, 11);
 	str[0] = '-';
 	S_ISDIR(ls->mode) ? str[0] = 'd' : 1;
 	S_ISLNK(ls->mode) ? str[0] = 'l' : 1;
@@ -52,13 +54,7 @@ void		print_perm(t_ls *ls, int flags, char str[11])
 	str[7] = (S_IROTH & ls->mode ? 'r' : '-');
 	str[8] = (S_IWOTH & ls->mode ? 'w' : '-');
 	str[9] = (S_IXOTH & ls->mode ? 'x' : '-');
-}
-
-void		print_detail_link(t_ls *ls)
-{
-	char	name[NAME_MAX];
-
-	ft_printf(" -> %s", name);
+	return (str);
 }
 
 void		print_color(t_ls *ls, int flags, int width)
@@ -66,20 +62,14 @@ void		print_color(t_ls *ls, int flags, int width)
 	char link[NAME_MAX];
 
 	bzero(link, sizeof(link));
-	if (!(flags & FL_COL))
-		ft_printf("%-*s", width, ls->name);
-	if (S_ISDIR(ls->mode) && flags & FL_COL)
-		ft_printf("%s%-*s%s", BOLD_CYAN, width, ls->name, RESET);
-	else if (S_ISLNK(ls->mode) && flags & FL_COL)
-		ft_printf("%s%-*s%s", MAGENTA, width, ls->name, RESET);
-	else if (S_ISBLK(ls->mode) && flags & FL_COL)
-		ft_printf("%s%-*s%s", BOLD_GREEN, width, ls->name, RESET);
-	else if (S_ISFIFO(ls->mode) && flags & FL_COL)
-		ft_printf("%s%-*s%s", GREEN, width, ls->name, RESET);
-	else if (S_ISCHR(ls->mode) && flags & FL_COL)
-		ft_printf("%s%-*s%s", BLUE, width, ls->name, RESET);
-	else if (S_ISREG(ls->mode) && flags & FL_COL)
-		ft_printf("%s%-*s%s", RED, width, ls->name, RESET);
+	S_ISDIR(ls->mode) && flags & FL_COL ? ft_printf("%s", BOLD_CYAN) : 1;
+	S_ISLNK(ls->mode) && flags & FL_COL ? ft_printf("%s", MAGENTA) : 1;
+	S_ISBLK(ls->mode) && flags & FL_COL ? ft_printf("%s", BOLD_GREEN) : 1;
+	S_ISFIFO(ls->mode) && flags & FL_COL ? ft_printf("%s", GREEN) : 1;
+	S_ISCHR(ls->mode) && flags & FL_COL ? ft_printf("%s", BLUE) : 1;
+	S_ISREG(ls->mode) && flags & FL_COL ? ft_printf("%s", RESET) : 1;
+	S_ISSOCK(ls->mode) && flags & FL_COL ? ft_printf("%s", BOLD_GREEN) : 1;
+	ft_printf("%-*s%s", width, ls->name, RESET);
 	if (flags & FL_LNG && S_ISLNK(ls->mode))
 	{
 		ft_printf(" -> ");
@@ -89,25 +79,46 @@ void		print_color(t_ls *ls, int flags, int width)
 	}
 }
 
+void		 *print_time(t_ls *ls)
+{	
+	time_t	now;
+	time_t	then;
+	time_t	diff;
+	char	*tmp;
+	char	str[13];
+
+	ft_bzero(str, sizeof(str));
+	then = ls->mtime;
+	tmp = ctime(&then);
+	now = time(NULL);
+	diff = now - then;
+	ft_memcpy(str, tmp + 4, 7);
+	if (diff < (-3600 * 24 * 30.5 * 6) || diff > (3600 * 24 * 30.5 * 6))
+	{
+		str[7] = ' ';
+		ft_memcpy(str + 8, tmp + 20, 4);
+	}
+	else
+		ft_memcpy(str + 7, tmp + 11, 5);
+	ft_printf(" %s ", str);
+}
+
 void		print_detail(t_ls *ls, int flags)
 {
 	int		width[4];
 	char	perm[11];
 
-	bzero(width, sizeof(width));
 	print_detail_width(ls, flags, width);
 	while (ls)
 	{
-		bzero(perm, sizeof(perm));
-		print_perm(ls, flags, perm);
-		ft_printf("%s", perm);
+		ft_printf("%s", print_perm(ls, flags, perm));
 		ft_printf("  %*hu", width[0], ls->link);
 		flags & FL_IND ? ft_printf(" %-*d", width[1], ls->uid) :\
 			ft_printf(" %-*s", width[1], getpwuid(ls->uid)->pw_name);
 		flags & FL_IND ? ft_printf("  %-*d", width[2], ls->gid) :\
 			ft_printf("  %-*s", width[2], getgrgid(ls->gid)->gr_name);
 		ft_printf("  %*lld", width[3], ls->size);
-		ft_printf(" %.12s ", ctime(&(ls->mtime)) + 4);
+		print_time(ls);
 		print_color(ls, flags, 0);
 		ft_printf("\n");
 		ls = ls->next;

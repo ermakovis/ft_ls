@@ -65,7 +65,7 @@ void		sort_rev(t_ls **ls)
     if (!head || !(head->next)) 
         return; 
     split(head, &a, &b); 
-    sort_lex(&a); 
-    sort_lex(&b); 
+    sort_rev(&a); 
+    sort_rev(&b); 
     *ls = merge(a, b); 
 } 

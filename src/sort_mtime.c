@@ -65,7 +65,7 @@ void		sort_mtime(t_ls **ls)
     if (!head || !(head->next)) 
         return; 
     split(head, &a, &b); 
-    sort_lex(&a); 
-    sort_lex(&b); 
+    sort_mtime(&a); 
+    sort_mtime(&b); 
     *ls = merge(a, b); 
 } 
