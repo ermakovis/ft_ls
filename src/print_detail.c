@@ -6,7 +6,7 @@
 /*   By: tcase <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/15 19:14:39 by tcase             #+#    #+#             */
-/*   Updated: 2019/06/15 19:16:09 by tcase            ###   ########.fr       */
+/*   Updated: 2019/06/22 19:12:33 by tcase            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,9 @@ void		print_detail_width(t_ls *ls, int flags, int width[7])
 {
 	int		total;
 
-	bzero(width, (sizeof(int) * 7));
 	total = 0;
+	if (!ls)
+		return;
 	while (ls)
 	{
 		width[0] = ft_max(ft_nbrlen(ls->link, 10), width[0]);
@@ -33,12 +34,11 @@ void		print_detail_width(t_ls *ls, int flags, int width[7])
 		total += ls->blocks;
 		ls = ls->next;
 	}
-	flags & FL_REGFL ? 1 : ft_printf("total %d\n", total);
+	!(flags & FL_REGFL) ? ft_printf("total %d\n", total) : 1;
 }
 
 static char		*print_perm(t_ls *ls, int flags, char str[11])
 {
-	bzero(str, 11);
 	str[0] = '-';
 	S_ISDIR(ls->mode) ? str[0] = 'd' : 1;
 	S_ISLNK(ls->mode) ? str[0] = 'l' : 1;
@@ -69,7 +69,8 @@ void		print_color(t_ls *ls, int flags, int width)
 	S_ISCHR(ls->mode) && flags & FL_COL ? ft_printf("%s", BLUE) : 1;
 	S_ISREG(ls->mode) && flags & FL_COL ? ft_printf("%s", RESET) : 1;
 	S_ISSOCK(ls->mode) && flags & FL_COL ? ft_printf("%s", BOLD_GREEN) : 1;
-	ft_printf("%-*s%s", width, ls->name, RESET);
+	ft_printf("%-*s", width, ls->name);
+	flags & FL_COL ? ft_printf("%s", RESET) : 1;
 	if (flags & FL_LNG && S_ISLNK(ls->mode))
 	{
 		ft_printf(" -> ");
@@ -79,24 +80,25 @@ void		print_color(t_ls *ls, int flags, int width)
 	}
 }
 
-void		 *print_time(t_ls *ls)
+void		 print_time(t_ls *ls)
 {	
 	time_t	now;
-	time_t	then;
 	time_t	diff;
 	char	*tmp;
-	char	str[13];
+	char	str[14];
 
 	ft_bzero(str, sizeof(str));
-	then = ls->mtime;
-	tmp = ctime(&then);
+	tmp = ctime(&(ls->mtime));
 	now = time(NULL);
-	diff = now - then;
+	diff = now - ls->mtime;
 	ft_memcpy(str, tmp + 4, 7);
 	if (diff < (-3600 * 24 * 30.5 * 6) || diff > (3600 * 24 * 30.5 * 6))
 	{
 		str[7] = ' ';
-		ft_memcpy(str + 8, tmp + 20, 4);
+		if (ft_nbrlen(ls->mtime, 10) < 11)
+			ft_memcpy(str + 8, tmp + 20, 4);
+		else
+			ft_memcpy(str + 8, tmp + 24, 5);
 	}
 	else
 		ft_memcpy(str + 7, tmp + 11, 5);
@@ -108,6 +110,8 @@ void		print_detail(t_ls *ls, int flags)
 	int		width[4];
 	char	perm[11];
 
+	bzero(width, (sizeof(width)));
+	bzero(perm, (sizeof(perm)));
 	print_detail_width(ls, flags, width);
 	while (ls)
 	{

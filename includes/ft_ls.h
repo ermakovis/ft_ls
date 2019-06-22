@@ -6,7 +6,7 @@
 /*   By: tcase <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/02 15:33:11 by tcase             #+#    #+#             */
-/*   Updated: 2019/06/15 22:18:56 by tcase            ###   ########.fr       */
+/*   Updated: 2019/06/22 20:19:44 by tcase            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ typedef struct				s_ls
 
 void						cleanup(t_ls **ls, int code, char *message);
 void						parse_params(int *ac, char ***av, int *flags);
-void						print_file(t_ls **ls, int flags);
+void						print_file(t_ls **ls, int *flags);
 void						print_detail(t_ls *ls, int flags);
 void						print_brief(t_ls *ls, int flags);
 void						print_color(t_ls *ls, int flags, int width);

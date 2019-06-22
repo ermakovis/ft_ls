@@ -6,7 +6,7 @@
 /*   By: tcase <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/15 21:36:13 by tcase             #+#    #+#             */
-/*   Updated: 2019/06/15 22:18:52 by tcase            ###   ########.fr       */
+/*   Updated: 2019/06/22 21:50:48 by tcase            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static t_ls	*merge(t_ls *a, t_ls *b)
         return (b); 
     else if (b == NULL) 
         return (a); 
-    if (a->mtime > b->mtime) 
+    if (a->mtime >= b->mtime) 
 	{ 
         result = a; 
         result->next = merge(a->next, b); 

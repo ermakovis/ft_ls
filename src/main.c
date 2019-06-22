@@ -6,7 +6,7 @@
 /*   By: tcase <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/02 15:15:48 by tcase             #+#    #+#             */
-/*   Updated: 2019/06/15 22:18:55 by tcase            ###   ########.fr       */
+/*   Updated: 2019/06/22 22:37:29 by tcase            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,26 @@ void		read_dir(t_ls *ls, t_ls **begin, int flags)
 	closedir(dir);
 }
 
+void		print_link(t_ls *ls, int flags)
+{
+	t_ls		*tmp;
+	t_ls		*begin;
+	char		link[NAME_MAX];
+
+	flags & FL_SEPAR ? ft_printf("\n") : (flags |= FL_SEPAR);
+	ft_printf("%s:\n", ls->path);
+	ft_bzero(link, sizeof(link));
+	link[0] = '.';
+	link[1] = '/';
+	readlink(ls->path, link + 2, NAME_MAX);
+	ft_bzero(ls->path, sizeof(ls->path));
+	ft_memcpy(ls->path, link, ft_strlen(link)); 
+	read_dir(ls, &begin, flags);
+	sort_ls(&begin, flags);
+	print_brief(begin, flags);
+	cleanup(&begin, 1, "");
+}
+
 void		recursion(t_ls *begin, int flags, int first)
 {
 	t_ls	*ls;
@@ -78,6 +98,8 @@ void		recursion(t_ls *begin, int flags, int first)
 	ls = begin;
 	while (ls)
 	{
+		if (S_ISLNK(ls->mode) && first)
+			print_link(ls, flags);
 		if (S_ISDIR(ls->mode) && (first || (ft_strcmp(ls->name, ".")
 						&& ft_strcmp(ls->name, ".."))))
 		{
@@ -105,7 +127,7 @@ int			main(int ac, char **av)
 	sort_av(ac, &av, flags);
 	init_ls(ac, av, &ls);
 	sort_ls(&ls, flags);
-	print_file(&ls, flags);
+	print_file(&ls, &flags);
 	recursion(ls, flags, 1);
 	cleanup(&ls, 0, "Success");
 }
