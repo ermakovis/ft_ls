@@ -6,7 +6,7 @@
 /*   By: tcase <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/09 19:03:06 by tcase             #+#    #+#             */
-/*   Updated: 2019/06/23 12:49:28 by tcase            ###   ########.fr       */
+/*   Updated: 2019/06/23 18:02:45 by tcase            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ static int	print_file_check(t_ls *tmp, int *flags)
 	return (1);
 }
 
-static void print_file_output(t_ls *tmp, int *flags)
+static void	print_file_output(t_ls *tmp, int *flags)
 {
 	tmp->next = NULL;
 	*flags ^= FL_REGFL;
@@ -82,4 +82,3 @@ void		print_file(t_ls **ls, int *flags)
 	print_file_first(ls, flags);
 	print_file_rest(ls, flags);
 }
-

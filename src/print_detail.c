@@ -6,19 +6,19 @@
 /*   By: tcase <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/15 19:14:39 by tcase             #+#    #+#             */
-/*   Updated: 2019/06/23 16:22:10 by tcase            ###   ########.fr       */
+/*   Updated: 2019/06/23 17:59:03 by tcase            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-void		print_detail_width(t_ls *ls, int flags, int width[7])
+static void		print_detail_width(t_ls *ls, int flags, int width[7])
 {
 	int		total;
 
 	total = 0;
 	if (!ls)
-		return;
+		return ;
 	while (ls)
 	{
 		width[0] = ft_max(ft_nbrlen(ls->link, 10), width[0]);
@@ -34,6 +34,7 @@ void		print_detail_width(t_ls *ls, int flags, int width[7])
 		total += ls->blocks;
 		ls = ls->next;
 	}
+	!(flags & FL_OGR) ? width[3]++ : 1;
 	!(flags & FL_REGFL) ? ft_printf("total %d\n", total) : 1;
 }
 
@@ -63,7 +64,7 @@ static char		*print_perm(t_ls *ls, int flags, char str[11])
 	return (str);
 }
 
-void		print_color(t_ls *ls, int flags, int width)
+void			print_color(t_ls *ls, int flags, int width)
 {
 	char link[NAME_MAX];
 
@@ -87,8 +88,8 @@ void		print_color(t_ls *ls, int flags, int width)
 	}
 }
 
-void		 print_time(t_ls *ls, int flags)
-{	
+void			print_time(t_ls *ls, int flags)
+{
 	time_t	now;
 	time_t	diff;
 	char	*str;
@@ -116,7 +117,7 @@ void		 print_time(t_ls *ls, int flags)
 	ft_printf(" ");
 }
 
-void		print_detail(t_ls *ls, int flags)
+void			print_detail(t_ls *ls, int flags)
 {
 	int		width[4];
 	char	perm[11];
@@ -131,9 +132,11 @@ void		print_detail(t_ls *ls, int flags)
 		if (!(flags & FL_POS))
 			flags & FL_IND ? ft_printf(" %-*d ", width[1], ls->uid) :\
 				ft_printf(" %-*s ", width[1], getpwuid(ls->uid)->pw_name);
-		flags & FL_IND ? ft_printf(" %-*d", width[2], ls->gid) :\
-			ft_printf(" %-*s", width[2], getgrgid(ls->gid)->gr_name);
-		ft_printf("  %*lld ", width[3], ls->size);
+		flags & FL_OGR && flags & FL_POS ? ft_printf("  ") : 1;
+		if (!(flags & FL_OGR))
+			flags & FL_IND ? ft_printf(" %-*d", width[2], ls->gid) :\
+				ft_printf(" %-*s", width[2], getgrgid(ls->gid)->gr_name);
+		ft_printf(" %*lld ", width[3], ls->size);
 		print_time(ls, flags);
 		print_color(ls, flags, 0);
 		ft_printf("\n");

@@ -6,7 +6,7 @@
 /*   By: tcase <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/02 15:33:11 by tcase             #+#    #+#             */
-/*   Updated: 2019/06/23 16:19:41 by tcase            ###   ########.fr       */
+/*   Updated: 2019/06/23 17:52:25 by tcase            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 # include <dirent.h>
 # include <unistd.h>
 # include "libft.h"
-# define FLAGS "AGRSTUacdfglnprtu1-"
+# define FLAGS "AGRSTUacdfglnoprtu1-"
 # define COL_MAX 256
 
 # define FL_HID (1 << 0)
@@ -39,12 +39,13 @@
 # define FL_POS (1 << 10)
 # define FL_LNG (1 << 11)
 # define FL_IND (1 << 12)
-# define FL_PSL (1 << 13)
-# define FL_REV (1 << 14)
-# define FL_STM (1 << 15)
-# define FL_ATM (1 << 16)
-# define FL_ONE (1 << 17)
-# define FL_MIN (1 << 18)
+# define FL_OGR (1 << 13)
+# define FL_PSL (1 << 14)
+# define FL_REV (1 << 15)
+# define FL_STM (1 << 16)
+# define FL_ATM (1 << 17)
+# define FL_ONE (1 << 18)
+# define FL_MIN (1 << 19)
 
 # define FL_REGNL (1 << 28)
 # define FL_HEADR (1 << 29)
@@ -85,6 +86,8 @@ void						print_detail(t_ls *ls, int flags);
 void						print_brief(t_ls *ls, int flags);
 void						print_color(t_ls *ls, int flags, int width);
 void						sort_ls(t_ls **ls, int flags);
+void						sort_av(int ac, char ***av, int flags);
+void						sort_reverse(t_ls **ls);
 void						init_ls(int ac, char **av, t_ls **ls, int flags);
 void						add_ls(char path[PATH_MAX], char name[NAME_MAX],\
 								t_ls **ls, int flags);

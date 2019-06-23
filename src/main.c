@@ -6,36 +6,11 @@
 /*   By: tcase <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/02 15:15:48 by tcase             #+#    #+#             */
-/*   Updated: 2019/06/23 13:40:02 by tcase            ###   ########.fr       */
+/*   Updated: 2019/06/23 18:04:02 by tcase            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
-
-void		sort_av(int ac, char ***av, int flags)
-{
-	int		i;
-	char	**tmp;
-	char	*tmpstr;
-
-	i = 0;
-	if (ac < 2 || flags & FL_SRT)
-		return ;
-	tmp = *av;
-	while (i < ac - 1)
-	{
-		if (ft_strcmp(tmp[i], tmp[i + 1]) > 0)
-		{
-			tmpstr = tmp[i];
-			tmp[i] = tmp[i + 1];
-			tmp[i + 1] = tmpstr;
-			i = 0;
-		}
-		else
-			i++;
-	}
-	*av = tmp;
-}
 
 void		read_dir(t_ls *ls, t_ls **begin, int flags)
 {
@@ -75,7 +50,7 @@ void		print_link(t_ls *ls, int *flags)
 	link[1] = '/';
 	readlink(ls->path, link + 2, NAME_MAX);
 	ft_bzero(ls->path, sizeof(ls->path));
-	ft_memcpy(ls->path, link, ft_strlen(link)); 
+	ft_memcpy(ls->path, link, ft_strlen(link));
 	read_dir(ls, &begin, *flags);
 	sort_ls(&begin, *flags);
 	print_brief(begin, *flags);

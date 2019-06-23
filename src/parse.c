@@ -6,7 +6,7 @@
 /*   By: tcase <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/02 16:48:04 by tcase             #+#    #+#             */
-/*   Updated: 2019/06/23 16:29:42 by tcase            ###   ########.fr       */
+/*   Updated: 2019/06/23 17:38:24 by tcase            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ void		add_flag(char *str, int *flags)
 		*str == 'n' ? *flags |= FL_LNG : 1;
 		*str == 'f' ? *flags |= FL_ALL : 1;
 		*str == 'g' ? *flags |= FL_LNG : 1;
+		*str == 'o' ? *flags |= FL_LNG : 1;
 		*flags |= (1 << shift);
 	}
 	*flags & FL_SSZ && *flags & FL_ATM ? (*flags ^= FL_ATM) : 1;
