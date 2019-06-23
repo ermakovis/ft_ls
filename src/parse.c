@@ -6,7 +6,7 @@
 /*   By: tcase <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/02 16:48:04 by tcase             #+#    #+#             */
-/*   Updated: 2019/06/22 21:50:53 by tcase            ###   ########.fr       */
+/*   Updated: 2019/06/23 16:29:42 by tcase            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,13 @@ void		add_flag(char *str, int *flags)
 			ft_dprintf(2, "usage: ft_ls [-%s] [file ...]\n", FLAGS);
 			exit(1);
 		}
-		shift == 7 ? *flags |= (1 << 6) : 1;
+		*str == '1' && *flags & FL_LNG ? *flags ^= FL_LNG : 1;
+		*str == 'n' ? *flags |= FL_LNG : 1;
+		*str == 'f' ? *flags |= FL_ALL : 1;
+		*str == 'g' ? *flags |= FL_LNG : 1;
 		*flags |= (1 << shift);
 	}
+	*flags & FL_SSZ && *flags & FL_ATM ? (*flags ^= FL_ATM) : 1;
 }
 
 void		parse_params(int *ac, char ***av, int *flags)

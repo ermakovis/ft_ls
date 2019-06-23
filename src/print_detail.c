@@ -6,7 +6,7 @@
 /*   By: tcase <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/15 19:14:39 by tcase             #+#    #+#             */
-/*   Updated: 2019/06/22 19:12:33 by tcase            ###   ########.fr       */
+/*   Updated: 2019/06/23 16:22:10 by tcase            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,11 +40,6 @@ void		print_detail_width(t_ls *ls, int flags, int width[7])
 static char		*print_perm(t_ls *ls, int flags, char str[11])
 {
 	str[0] = '-';
-	S_ISDIR(ls->mode) ? str[0] = 'd' : 1;
-	S_ISLNK(ls->mode) ? str[0] = 'l' : 1;
-	S_ISFIFO(ls->mode) ? str[0] = 'p' : 1;
-	S_ISCHR(ls->mode) ? str[0] = 'c' : 1;
-	S_ISBLK(ls->mode) ? str[0] = 'b' : 1;
 	str[1] = (S_IRUSR & ls->mode ? 'r' : '-');
 	str[2] = (S_IWUSR & ls->mode ? 'w' : '-');
 	str[3] = (S_IXUSR & ls->mode ? 'x' : '-');
@@ -54,6 +49,17 @@ static char		*print_perm(t_ls *ls, int flags, char str[11])
 	str[7] = (S_IROTH & ls->mode ? 'r' : '-');
 	str[8] = (S_IWOTH & ls->mode ? 'w' : '-');
 	str[9] = (S_IXOTH & ls->mode ? 'x' : '-');
+	S_ISDIR(ls->mode) ? str[0] = 'd' : 1;
+	S_ISLNK(ls->mode) ? str[0] = 'l' : 1;
+	S_ISFIFO(ls->mode) ? str[0] = 'p' : 1;
+	S_ISCHR(ls->mode) ? str[0] = 'c' : 1;
+	S_ISBLK(ls->mode) ? str[0] = 'b' : 1;
+	if (S_ISUID & ls->mode)
+		str[3] = (str[3] == '-' ? 'S' : 's');
+	if (S_ISGID & ls->mode)
+		str[6] = (str[6] == '-' ? 'S' : 's');
+	if (S_ISVTX & ls->mode)
+		str[9] = (str[9] == '-' ? 'T' : 't');
 	return (str);
 }
 
@@ -71,6 +77,7 @@ void		print_color(t_ls *ls, int flags, int width)
 	S_ISSOCK(ls->mode) && flags & FL_COL ? ft_printf("%s", BOLD_GREEN) : 1;
 	ft_printf("%-*s", width, ls->name);
 	flags & FL_COL ? ft_printf("%s", RESET) : 1;
+	flags & FL_PSL && S_ISDIR(ls->mode) && !width ? ft_printf("/") : 1;
 	if (flags & FL_LNG && S_ISLNK(ls->mode))
 	{
 		ft_printf(" -> ");
@@ -80,29 +87,33 @@ void		print_color(t_ls *ls, int flags, int width)
 	}
 }
 
-void		 print_time(t_ls *ls)
+void		 print_time(t_ls *ls, int flags)
 {	
 	time_t	now;
 	time_t	diff;
+	char	*str;
 	char	*tmp;
-	char	str[14];
 
-	ft_bzero(str, sizeof(str));
-	tmp = ctime(&(ls->mtime));
+	str = ctime(&(ls->time));
+	if (flags & FL_FTM)
+	{
+		tmp = ft_strtrim(str + 4);
+		ft_printf("%s ", tmp);
+		ft_memdel((void**)&tmp);
+		return ;
+	}
 	now = time(NULL);
-	diff = now - ls->mtime;
-	ft_memcpy(str, tmp + 4, 7);
+	diff = now - ls->time;
+	write(1, str + 4, 7);
 	if (diff < (-3600 * 24 * 30.5 * 6) || diff > (3600 * 24 * 30.5 * 6))
 	{
-		str[7] = ' ';
-		if (ft_nbrlen(ls->mtime, 10) < 11)
-			ft_memcpy(str + 8, tmp + 20, 4);
-		else
-			ft_memcpy(str + 8, tmp + 24, 5);
+		tmp = ft_strtrim(str + 20);
+		ft_printf(" %s", tmp);
+		ft_memdel((void**)&tmp);
 	}
 	else
-		ft_memcpy(str + 7, tmp + 11, 5);
-	ft_printf(" %s ", str);
+		write(1, str + 11, 5);
+	ft_printf(" ");
 }
 
 void		print_detail(t_ls *ls, int flags)
@@ -117,12 +128,13 @@ void		print_detail(t_ls *ls, int flags)
 	{
 		ft_printf("%s", print_perm(ls, flags, perm));
 		ft_printf("  %*hu", width[0], ls->link);
-		flags & FL_IND ? ft_printf(" %-*d", width[1], ls->uid) :\
-			ft_printf(" %-*s", width[1], getpwuid(ls->uid)->pw_name);
-		flags & FL_IND ? ft_printf("  %-*d", width[2], ls->gid) :\
-			ft_printf("  %-*s", width[2], getgrgid(ls->gid)->gr_name);
-		ft_printf("  %*lld", width[3], ls->size);
-		print_time(ls);
+		if (!(flags & FL_POS))
+			flags & FL_IND ? ft_printf(" %-*d ", width[1], ls->uid) :\
+				ft_printf(" %-*s ", width[1], getpwuid(ls->uid)->pw_name);
+		flags & FL_IND ? ft_printf(" %-*d", width[2], ls->gid) :\
+			ft_printf(" %-*s", width[2], getgrgid(ls->gid)->gr_name);
+		ft_printf("  %*lld ", width[3], ls->size);
+		print_time(ls, flags);
 		print_color(ls, flags, 0);
 		ft_printf("\n");
 		ls = ls->next;

@@ -6,17 +6,23 @@
 /*   By: tcase <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/09 19:03:06 by tcase             #+#    #+#             */
-/*   Updated: 2019/06/22 22:49:40 by tcase            ###   ########.fr       */
+/*   Updated: 2019/06/23 12:49:28 by tcase            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-static int	print_file_lnkcheck(t_ls *tmp, int *flags)
+static int	print_file_check(t_ls *tmp, int *flags)
 {
 	t_stat		stat;
 	char		link[NAME_MAX + 1];
 
+	if (S_ISREG(tmp->mode))
+		return (1);
+	if (S_ISDIR(tmp->mode) && *flags & FL_DIR)
+		return (1);
+	if (!S_ISLNK(tmp->mode))
+		return (0);
 	ft_bzero(link, sizeof(link));
 	link[0] = '.';
 	link[1] = '/';
@@ -38,38 +44,36 @@ static void print_file_output(t_ls *tmp, int *flags)
 
 static void	print_file_first(t_ls **ls, int *flags)
 {
-	t_ls *tmp;
+	t_ls	*cur;
 
-	tmp = *ls;
-	if (!ls || !*ls)
-		return ;
-	if (S_ISREG(tmp->mode) || print_file_lnkcheck(tmp, flags))
+	while ((*ls) && print_file_check((*ls), flags))
 	{
+		cur = *ls;
 		(*ls) = (*ls)->next;
-		print_file_output(tmp, flags);	
-		print_file_first(ls, flags);
+		print_file_output(cur, flags);
 	}
 }
 
-void		print_file_rest(t_ls **ls, int *flags)
+static void	print_file_rest(t_ls **ls, int *flags)
 {
-	t_ls *tmp;
-	t_ls *cur;
+	t_ls	*cur;
+	t_ls	*prev;
 
-	if (!ls || !*ls)
-		return ;
-	tmp = *ls;
-	while (tmp->next)
+	prev = NULL;
+	cur = *ls;
+	while (cur)
 	{
-		if (tmp->next && (S_ISREG(tmp->next->mode) ||\
-					print_file_lnkcheck(tmp->next, flags)))
+		if (print_file_check(cur, flags))
 		{
-			cur = tmp->next->next;
-			print_file_output(tmp->next, flags);
-			tmp->next = cur;
+			prev->next = cur->next;
+			print_file_output(cur, flags);
+			cur = prev->next;
 		}
 		else
-			tmp = tmp->next;
+		{
+			prev = cur;
+			cur = cur->next;
+		}
 	}
 }
 
@@ -77,6 +81,5 @@ void		print_file(t_ls **ls, int *flags)
 {
 	print_file_first(ls, flags);
 	print_file_rest(ls, flags);
-	*flags & FL_REGNL && *ls ? ft_printf("\n") : 1;
 }
 
