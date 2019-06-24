@@ -6,7 +6,7 @@
 #    By: tcase <marvin@42.fr>                       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/04/06 11:31:10 by tcase             #+#    #+#              #
-#    Updated: 2019/06/23 17:51:13 by tcase            ###   ########.fr        #
+#    Updated: 2019/06/24 14:48:33 by tcase            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,6 +23,7 @@ SRC_NAME=main.c\
 		 parse.c\
 		 init_ls.c\
 		 print_detail.c\
+		 print_detail_2.c\
 		 print_brief.c\
 		 print_file.c\
 		 sort.c\
